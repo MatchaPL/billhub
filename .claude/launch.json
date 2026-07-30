@@ -1,0 +1,35 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "paypers-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "lawbam-demo",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4321", "--directory", "/Users/nitipoom/Desktop/law bam"],
+      "port": 4321
+    },
+    {
+      "name": "quantgang-backend",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/nitipoom/Desktop/finance/backend && APP_PORT=8001 exec python3 main.py"
+      ],
+      "port": 8001
+    },
+    {
+      "name": "quantgang-frontend",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/nitipoom/Desktop/finance/frontend && NEXT_PUBLIC_API_URL=http://localhost:8001 exec npm run dev"
+      ],
+      "port": 3000
+    }
+  ]
+}
