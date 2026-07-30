@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BillHUB — AI Expense Auditor on LINE
+
+Turn a photo of a receipt into structured, audited accounting data — entirely inside LINE.
+Snap a receipt in the chat, and BillHUB reads it, categorizes it, and flags anything suspicious.
+
+Built as an end-to-end **LINE chatbot + LIFF** product on **Next.js 16 / React 19**, deployed on Vercel.
+
+## Features
+
+- **Receipt → structured data** — send a receipt photo in LINE; an OCR pipeline on **Google Cloud Vision** with a custom **Thai receipt parser** extracts store, amount, VAT, and date (Buddhist-era aware) and auto-categorizes the expense.
+- **Expense-audit engine** — duplicate detection plus a **0–100 risk score** with human-readable flag reasons, so anomalies surface automatically instead of being buried in a spreadsheet.
+- **Secure webhook** — inbound LINE events are verified with **HMAC-SHA256** signature validation; Google APIs are called with signed service tokens (**JWT RS256**) minted at the edge via the Web Crypto API.
+- **LIFF registration flow** — in-LINE onboarding that links a LINE user to their account.
+- **3D animated landing page** — marketing site built with **Three.js / React Three Fiber**, backed by **Supabase Postgres** with row-level security.
+
+## Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 16 (App Router), React 19, TypeScript |
+| Messaging | LINE Messaging API, LIFF |
+| OCR / Vision | Google Cloud Vision, custom Thai receipt parser |
+| Data | Supabase (PostgreSQL) with RLS |
+| 3D / UI | Three.js, React Three Fiber, Tailwind CSS |
+| Deploy | Vercel (serverless API routes) |
+
+## Project Structure
+
+```
+src/
+├─ app/
+│  ├─ api/
+│  │  ├─ webhook/route.ts   # LINE webhook — HMAC verify + OCR + audit
+│  │  └─ register/route.ts  # LIFF registration endpoint
+│  ├─ liff/register/        # in-LINE onboarding page
+│  └─ page.tsx              # 3D landing page
+├─ components/              # landing sections + Scene3D (R3F)
+└─ lib/
+   ├─ ocr.ts                # Google Vision + Thai parser + JWT RS256 signing
+   └─ supabase.ts           # Supabase client
+```
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create `.env.local` with (never commit this file):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+LINE_CHANNEL_SECRET=...
+LINE_CHANNEL_ACCESS_TOKEN=...
+GOOGLE_SERVICE_ACCOUNT_BASE64=...   # base64 of the GCP service-account JSON
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Database schema lives in [`supabase-schema.sql`](supabase-schema.sql).
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Founder & full-stack developer · 2026*
